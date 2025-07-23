@@ -1,0 +1,23 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main  # or your default branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH to DigitalOcean and deploy
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: root
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            cd ~/LAU-Transactions
+            git pull
+            npm install
+            pm2 restart lau-bot
